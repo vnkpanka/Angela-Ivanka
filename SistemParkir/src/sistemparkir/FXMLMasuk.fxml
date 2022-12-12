@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="338.0" prefWidth="446.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="sistemparkir.FXMLMasukController">
+   <children>
+      <ImageView fitHeight="375.0" fitWidth="455.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Untitled%20design%20(7).png" />
+         </image>
+      </ImageView>
+      <Label layoutX="383.0" layoutY="30.0" text="-">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="270.0" layoutY="30.0" text="Kuota Parkir :">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="42.0" layoutY="125.0" text="Jenis Kendaraan">
+         <font>
+            <Font name="Comic Sans MS Bold" size="13.0" />
+         </font>
+      </Label>
+      <RadioButton fx:id="rdbmobil" layoutX="174.0" layoutY="125.0" mnemonicParsing="false" text="Mobil">
+         <toggleGroup>
+            <ToggleGroup fx:id="Jenis" />
+         </toggleGroup>
+         <font>
+            <Font name="Comic Sans MS Bold" size="13.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="rdbmotor" layoutX="174.0" layoutY="152.0" mnemonicParsing="false" text="Motor" toggleGroup="$Jenis">
+         <font>
+            <Font name="Comic Sans MS Bold" size="13.0" />
+         </font>
+      </RadioButton>
+      <Button fx:id="btnhapus" layoutX="59.0" layoutY="268.0" mnemonicParsing="false" onAction="#hapusklik" text="Hapus">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnexit" layoutX="338.0" layoutY="268.0" mnemonicParsing="false" onAction="#exitklik" text="Keluar">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnwktmsk" layoutX="177.0" layoutY="268.0" mnemonicParsing="false" onAction="#wktmskklik" text="Output Tiket">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtplat" layoutX="173.0" layoutY="82.0">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </TextField>
+      <Label layoutX="66.0" layoutY="86.0" text="Plat Nomor">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

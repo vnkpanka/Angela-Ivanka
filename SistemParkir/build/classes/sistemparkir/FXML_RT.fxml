@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="sistemparkir.FXML_RTController">
+   <children>
+      <ImageView fitHeight="497.0" fitWidth="612.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="file:/E:/SEM5/PBOL/SistemParkir/src/Untitled%20design%20(7).png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnexit" layoutX="502.0" layoutY="383.0" mnemonicParsing="false" onAction="#exitklik" text="Keluar">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Button>
+      <TableView fx:id="tbvrt" layoutX="54.0" layoutY="71.0" prefHeight="239.0" prefWidth="515.0">
+         <columns>
+            <TableColumn prefWidth="75.0" text="C1" />
+            <TableColumn prefWidth="75.0" text="C2" />
+         </columns>
+      </TableView>
+      <Label layoutX="254.0" layoutY="31.0" text="Monitor Realtime">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

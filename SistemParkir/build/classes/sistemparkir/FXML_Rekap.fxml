@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="455.0" prefWidth="611.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sistemparkir.FXML_RekapController">
+   <children>
+      <ImageView fitHeight="497.0" fitWidth="612.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="file:/E:/SEM5/PBOL/SistemParkir/src/Untitled%20design%20(7).png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="tbvhistory" layoutX="46.0" layoutY="58.0" prefHeight="239.0" prefWidth="515.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnmasuk" layoutX="80.0" layoutY="373.0" mnemonicParsing="false" onAction="#masukklik" text="Masuk Parkir">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font></Button>
+      <Button fx:id="btnkeluar" layoutX="265.0" layoutY="373.0" mnemonicParsing="false" onAction="#keluarklik" text="Keluar Parkir">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font></Button>
+      <Button fx:id="btnexit" layoutX="466.0" layoutY="373.0" mnemonicParsing="false" onAction="#exitklik" text="Keluar">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font></Button>
+   </children>
+</AnchorPane>
