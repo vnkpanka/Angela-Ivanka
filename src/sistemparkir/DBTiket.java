@@ -16,33 +16,35 @@ import javafx.collections.ObservableList;
  * @author BOSS
  */
 public class DBTiket {
-    private Parkir dt=new Parkir();
+    private ModelTiket dt=new ModelTiket();
 
-    public Parkir getParkir() {
+    public ModelTiket getModelTiket() {
         return dt;
     }
 
-    public void setParkir(Parkir dt) {
+    public void setModelTiket(ModelTiket dt) {
         this.dt = dt;
     }
     
-    public ObservableList<Parkir> Load(){
+    public ObservableList<ModelTiket> Load(){
         try {
-            ObservableList<Parkir>
+            ObservableList<ModelTiket>
                     TableData=FXCollections.observableArrayList();
             koneksi con = new koneksi();
             con.bukaKoneksi();
             con.statement = con.dbkoneksi.createStatement();
             ResultSet rs = con.statement.executeQuery(
-            "Select NoTiket, Plat, JamMasuk, HariMasuk, Status from tiket");
+            "Select * from tiket where Status = 'false'");
             int i =1;
             while (rs.next()){
-                Parkir d=new Parkir();
+                ModelTiket d=new ModelTiket();
             d.setNoTiket(rs.getString("NoTiket"));
             d.setPlat(rs.getString("Plat"));
-            d.setWktmsk(rs.getTime("JamMasuk"));
-            d.setTglmsk(rs.getDate("HariMasuk"));
+            d.setJamMasuk(rs.getTime("JamMasuk"));
+            d.setHariMasuk(rs.getDate("HariMasuk"));
             d.setStatus(rs.getString("Status"));
+            d.setJenis(rs.getString("jenis"));
+            d.setIdgedung(rs.getString("idgedung"));
             TableData.add(d);
             i++;
             }
@@ -53,6 +55,26 @@ public class DBTiket {
     return null;
 }
         
+    }
+    
+    public boolean update() {
+        boolean berhasil = false;
+        koneksi con = new koneksi();
+        try {
+            con.bukaKoneksi();
+            con.preparedStatement = con.dbkoneksi.prepareStatement(
+                    "update tiket set Status = ? where  NoTiket = ? ; ");
+            con.preparedStatement.setString(1, getModelTiket().getStatus());
+            con.preparedStatement.setString(2, getModelTiket().getNoTiket());
+            con.preparedStatement.executeUpdate();
+            berhasil = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            berhasil = false;
+        } finally {
+            con.tutupKoneksi();
+            return berhasil;
+        }
     }
     
      public int validasi(String nomor) {
@@ -77,12 +99,14 @@ public class DBTiket {
         try {         
             con.bukaKoneksi();
             con.preparedStatement = con.dbkoneksi.prepareStatement
-        ("insert into tiket (NoTiket, Plat, JamMasuk, HariMasuk, Status) values (?,?,?,?,?)");
-            con.preparedStatement.setString(1, getParkir().getNoTiket());
-            con.preparedStatement.setString(2, getParkir().getPlat());
-            con.preparedStatement.setTime(3, getParkir().getWktmsk());
-            con.preparedStatement.setDate(4, getParkir().getTglmsk());
-            con.preparedStatement.setString(5, getParkir().getStatus());
+        ("insert into tiket (NoTiket, Plat, JamMasuk, HariMasuk, Status, jenis, idgedung) values (?,?,?,?,?,?,?)");
+            con.preparedStatement.setString(1, getModelTiket().getNoTiket());
+            con.preparedStatement.setString(2, getModelTiket().getPlat());
+            con.preparedStatement.setTime(3, getModelTiket().getJamMasuk());
+            con.preparedStatement.setDate(4, getModelTiket().getHariMasuk());
+            con.preparedStatement.setString(5, getModelTiket().getStatus());
+            con.preparedStatement.setString(6, getModelTiket().getJenis());
+            con.preparedStatement.setString(7, getModelTiket().getIdgedung());
             con.preparedStatement.executeUpdate();
             berhasil = true;
         } catch (Exception e) 
@@ -113,65 +137,16 @@ public class DBTiket {
         }
     }
 
-     public boolean update() {
-        boolean berhasil = false;
-        koneksi con = new koneksi();
-        try {
-            con.bukaKoneksi();
-            con.preparedStatement = con.dbkoneksi.prepareStatement(
-                    "update tiket set Plat = ?, JamMasuk = ?, HariMasuk = ?, Status = ? where  NoTiket = ? ; ");
-            con.preparedStatement.setString(1, getParkir().getPlat());
-            con.preparedStatement.setTime(2, getParkir().getWktmsk());
-            con.preparedStatement.setDate(3, getParkir().getTglmsk());
-            con.preparedStatement.setString(4, getParkir().getStatus());
-            con.preparedStatement.setString(5, getParkir().getNoTiket());
-            con.preparedStatement.executeUpdate();
-            berhasil = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            berhasil = false;
-        } finally {
-            con.tutupKoneksi();
-            return berhasil;
-        }
-    }
-     /*
-     public ObservableList<Parkir> LookUp(String fld,String dt){
-   try{
-       ObservableList<Parkir> tableData=FXCollections.observableArrayList();
-       koneksi con=new koneksi();
-       con.bukaKoneksi();
-       con.statement = con.dbkoneksi.createStatement();
-       ResultSet rs = con.statement.executeQuery("Select NoTiket, JamMasuk, HariMasuk from tiket where "
-               +fld+" like '%"+dt+"%'");
-       int i=1;
-       while (rs.next()){
-                Parkir d=new Parkir();
-                d.setNoTiket(rs.getString("NoTiket"));
-                d.setPlat(rs.getString("Plat"));
-                d.setWktmsk(rs.getTime("Jam_Masuk"));
-                d.setTglmsk(rs.getDate("Hari_Masuk"));
-                tableData.add(d);
-                i++;
-       }
-       con.tutupKoneksi();
-       return tableData;
-   } catch (SQLException ex){       
-       ex.printStackTrace();       
-       return null;      
-   }
-}*/
      
+    
      public ArrayList<String> CheckKode(String nomor){
          ArrayList<String> List = new ArrayList<>();
         try {
-            ObservableList<Parkir>
-                    TableData=FXCollections.observableArrayList();
             koneksi con = new koneksi();
             con.bukaKoneksi();
             con.statement = con.dbkoneksi.createStatement();
             ResultSet rs = con.statement.executeQuery(
-            "Select NoTiket from tiket where NoTiket like '%"+nomor+"%'");
+            "Select NoTiket from tiket where Plat = '"+nomor+"'");
             int i =1;
             while (rs.next()){
             List.add(rs.getString("NoTiket"));
@@ -182,42 +157,46 @@ public class DBTiket {
     e.printStackTrace();
     return null;
 }
-        
-    }
+}
 
-     public AmbilTiket CariTiket(String Plat){
+    public ModelTiket Search(String nomor){
+        ModelTiket m = new ModelTiket();
         try {
-            AmbilTiket list = new AmbilTiket();
             koneksi con = new koneksi();
             con.bukaKoneksi();
             con.statement = con.dbkoneksi.createStatement();
             ResultSet rs = con.statement.executeQuery(
-            "Select NoTiket, Plat, JamMasuk from tiket where Plat = '" + Plat + "' and Status = false");
-                     
+            "Select * from tiket where NoTiket like '%"+nomor+"%'");
             int i =1;
             while (rs.next()){
-                list.setNoTiket(rs.getString("NoTiket"));
-                list.setJamMasuk(rs.getTime("JamMasuk"));
+            m.setNoTiket(rs.getString("NoTiket"));
+            m.setHariMasuk(rs.getDate("HariMasuk"));
+            m.setJamMasuk(rs.getTime("JamMasuk"));
+            m.setPlat(rs.getString("Plat"));
+            m.setStatus(rs.getString("Status"));
+            m.setJenis(rs.getString("jenis"));
+            m.setIdgedung(rs.getString("idgedung"));
             }
             con.tutupKoneksi();
-        return list;
+        return m;
         }catch (Exception e){
     e.printStackTrace();
     return null;
 }
     }
+            
      
-     public ArrayList<String> List(){
+     public ArrayList<String> ListParkiran(){
             ArrayList list = new ArrayList<>();
             try {
             koneksi con = new koneksi();
             con.bukaKoneksi();
             con.statement = con.dbkoneksi.createStatement();
             ResultSet rs = con.statement.executeQuery(
-            "Select Plat from tiket where Status = false");
+            "Select NoTiket from tiket where Status = 'false'");
             int i =1;
             while (rs.next()){
-            list.add(rs.getString("Plat"));
+            list.add(rs.getString("NoTiket"));
             }
             con.tutupKoneksi();
         return list;
@@ -226,7 +205,7 @@ public class DBTiket {
     return null;
 }
             
-        }
+}
 
 
 }

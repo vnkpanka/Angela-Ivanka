@@ -15,26 +15,31 @@ import javafx.collections.ObservableList;
  * @author BOSS
  */
 public class DBTransaksi {
-    private Transaksi dt=new Transaksi();
-    public Transaksi getTransaksi() {return dt;}
-    public void setTransaksi(Transaksi dt) {this.dt = dt;}
+    private ModelTransaksi dt=new ModelTransaksi();
+    public ModelTransaksi getModelTransaksi() {return dt;}
+    public void setModelTransaksi(ModelTransaksi dt) {this.dt = dt;}
     
-    public ObservableList<Transaksi> Load(){
+    public ObservableList<ModelTransaksi> Load(){
         try {
-            ObservableList<Transaksi>
+            ObservableList<ModelTransaksi>
             TableData=FXCollections.observableArrayList();
             koneksi con = new koneksi();
             con.bukaKoneksi();
             con.statement = con.dbkoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("select NoTrans, t.NoTiket, JamMasuk, Jam_Keluar, Total_Bayar from transaksi t join tiket k on (t.NoTiket = k.NoTiket)");
+            ResultSet rs = con.statement.executeQuery("select NoTrans, Gedung, t.NoTiket, HariMasuk, JamMasuk, Jam_Keluar, Total_Bayar, jenis, Plat from transaksi t "
+                                                    + "join tiket k on (t.NoTiket = k.NoTiket)");
             int i =1;
             while (rs.next()){
-            Transaksi d=new Transaksi();
+            ModelTransaksi d=new ModelTransaksi();
             d.setNoTrans(rs.getString("NoTrans"));
             d.setNoTiket(rs.getString("NoTiket"));
+            d.setHari_Masuk(rs.getDate("HariMasuk"));
             d.setJam_Masuk(rs.getTime("JamMasuk"));
             d.setJam_Keluar(rs.getTime("Jam_Keluar"));
             d.setTotal_Bayar(rs.getInt("Total_Bayar"));
+            d.setIdgedung(rs.getString("Gedung"));
+            d.setJenis(rs.getString("jenis"));
+            d.setPlat(rs.getString("Plat"));
             TableData.add(d);
             i++;
             }
@@ -53,7 +58,7 @@ public class DBTransaksi {
             koneksi con = new koneksi();     
             con.bukaKoneksi();   
             con.statement = con.dbkoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("select count(*) as jml from siswa where NoTrans = '" + nomor + "'");
+            ResultSet rs = con.statement.executeQuery("select count(*) as jml from transaksi where NoTrans = '" + nomor + "'");
             while (rs.next()) {   val = rs.getInt("jml");            }
             con.tutupKoneksi();
         } catch (SQLException e) 
@@ -68,13 +73,13 @@ public class DBTransaksi {
         koneksi con = new koneksi();
         try {         
             con.bukaKoneksi();
-            con.preparedStatement = con.dbkoneksi.prepareStatement("insert into transaksi (NoTrans, NoTiket, Jam_Keluar, Hari_Keluar, Total_Bayar) values (?,?,?,?,?)");
-            con.preparedStatement.setString(1, getTransaksi().getNoTrans());
-            con.preparedStatement.setString(2, getTransaksi().getNoTiket());
-            con.preparedStatement.setTime(3, getTransaksi().getJam_Keluar());
-            con.preparedStatement.setDate(4, getTransaksi().getHari_Keluar());
-            con.preparedStatement.setInt(5, getTransaksi().getTotal_Bayar());
-            
+            con.preparedStatement = con.dbkoneksi.prepareStatement("insert into transaksi (NoTrans, NoTiket, Jam_Keluar, Hari_Keluar, Total_Bayar, Gedung) values (?,?,?,?,?,?)");
+            con.preparedStatement.setString(1, getModelTransaksi().getNoTrans());
+            con.preparedStatement.setString(2, getModelTransaksi().getNoTiket());
+            con.preparedStatement.setTime(3, getModelTransaksi().getJam_Keluar());
+            con.preparedStatement.setDate(4, getModelTransaksi().getHari_Keluar());
+            con.preparedStatement.setInt(5, getModelTransaksi().getTotal_Bayar());
+            con.preparedStatement.setString(6, getModelTransaksi().getIdgedung());
             con.preparedStatement.executeUpdate();
             berhasil = true;
         } catch (Exception e) 
@@ -111,12 +116,14 @@ public class DBTransaksi {
         try {
             con.bukaKoneksi();
             con.preparedStatement = con.dbkoneksi.prepareStatement(
-                    "update siswa set NoTiket = ?, Jam_Keluar = ?, Hari_Keluar = ?, TotalBayar = ?  where  NoTrans = ? ; ");
-            con.preparedStatement.setString(1, getTransaksi().getNoTiket());
-            con.preparedStatement.setTime(2, getTransaksi().getJam_Keluar());
-            con.preparedStatement.setDate(3, getTransaksi().getHari_Keluar());
-            con.preparedStatement.setInt(4, getTransaksi().getTotal_Bayar());
-            con.preparedStatement.setString(5, getTransaksi().getNoTrans());
+                    "update transaksi set NoTiket = ?, Jam_Keluar = ?, Hari_Keluar = ?, TotalBayar = ?, Gedung = ?  where  NoTrans = ? ; ");
+            con.preparedStatement.setString(1, getModelTransaksi().getNoTiket());
+            con.preparedStatement.setTime(2, getModelTransaksi().getJam_Keluar());
+            con.preparedStatement.setDate(3, getModelTransaksi().getHari_Keluar());
+            con.preparedStatement.setInt(4, getModelTransaksi().getTotal_Bayar());
+            con.preparedStatement.setString(5, getModelTransaksi().getNoTrans());
+            con.preparedStatement.setString(6, getModelTransaksi().getNoTrans());
+            
             con.preparedStatement.executeUpdate();
             berhasil = true;
         } catch (Exception e) {
@@ -141,26 +148,32 @@ public class DBTransaksi {
             }
             con.tutupKoneksi();
         return list;
+
         }catch (Exception e){
     e.printStackTrace();
     return null;
 }
             
         }
-     /*
-     public ObservableList<Transaksi> LookUp(String fld,String dt){
+    
+     public ObservableList<ModelTransaksi> LookUp(String fld,String dt){
    try{
-       ObservableList<SiswaModel> tableData=FXCollections.observableArrayList();
+       ObservableList<ModelTransaksi> tableData=FXCollections.observableArrayList();
        koneksi con=new koneksi();
        con.bukaKoneksi();
        con.statement = con.dbkoneksi.createStatement();
-       ResultSet rs = con.statement.executeQuery("Select NPM, Nama, Alamat from siswa where "+fld+" like '%"+dt+"%'");
+       ResultSet rs = con.statement.executeQuery("select NoTrans, Gedung, t.NoTiket, HariMasuk, JamMasuk, Jam_Keluar, Total_Bayar from transaksi t "
+                                                    + "join tiket k on (t.NoTiket = k.NoTiket) where "+fld+" like '%"+dt+"%'");
        int i=1;
        while (rs.next()){
-                SiswaModel d=new SiswaModel();
-                d.setNPM(rs.getString("NPM"));
-                d.setNama(rs.getString("Nama"));
-                d.setAlamat(rs.getString("Alamat"));
+                ModelTransaksi d=new ModelTransaksi();
+            d.setNoTrans(rs.getString("NoTrans"));
+            d.setNoTiket(rs.getString("NoTiket"));
+            d.setHari_Masuk(rs.getDate("HariMasuk"));
+            d.setJam_Masuk(rs.getTime("JamMasuk"));
+            d.setJam_Keluar(rs.getTime("Jam_Keluar"));
+            d.setTotal_Bayar(rs.getInt("Total_Bayar"));
+            d.setIdgedung(rs.getString("Gedung"));
                 tableData.add(d);
                 i++;
        }
@@ -170,5 +183,5 @@ public class DBTransaksi {
        ex.printStackTrace();       
        return null;      
    }
-}*/
+}
 }

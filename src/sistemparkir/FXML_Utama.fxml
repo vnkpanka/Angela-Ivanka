@@ -15,15 +15,15 @@
             <Image url="file:/E:/SEM5/PBOL/SistemParkir/src/Untitled%20design%20(7).png" />
          </image>
       </ImageView>
-      <Button fx:id="btnmasuk" layoutX="37.0" layoutY="87.0" mnemonicParsing="false" onAction="#masukklik" text="Masuk Parkir">
+      <Button fx:id="btnmasuk" layoutX="37.0" layoutY="56.0" mnemonicParsing="false" onAction="#masukklik" text="Masuk Parkir">
          <font>
             <Font name="Comic Sans MS Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="btnkeluar" layoutX="172.0" layoutY="87.0" mnemonicParsing="false" onAction="#keluarklik" text="Keluar Parkir">
+      <Button fx:id="btnkeluar" layoutX="175.0" layoutY="56.0" mnemonicParsing="false" onAction="#keluarklik" text="Keluar Parkir">
          <font>
             <Font name="Comic Sans MS Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="btntrans" layoutX="95.0" layoutY="129.0" mnemonicParsing="false" onAction="#transklik" text="History Transaksi">
+      <Button fx:id="btntrans" layoutX="89.0" layoutY="140.0" mnemonicParsing="false" onAction="#transklik" text="History Transaksi">
          <font>
             <Font name="Comic Sans MS Bold" size="14.0" />
          </font></Button>
@@ -31,5 +31,10 @@
          <font>
             <Font name="Comic Sans MS Bold" size="14.0" />
          </font></Button>
+      <Button fx:id="btnrt" layoutX="101.0" layoutY="96.0" mnemonicParsing="false" onAction="#rtklik" text="Data Realtime">
+         <font>
+            <Font name="Comic Sans MS Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

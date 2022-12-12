@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 public class FXML_RekapController implements Initializable {
 
     @FXML
-    private TableView<Transaksi> tbvhistory;
+    private TableView<ModelTransaksi> tbvhistory;
     @FXML
     private Button btnmasuk;
     @FXML
@@ -50,26 +50,44 @@ public class FXML_RekapController implements Initializable {
     }    
 
     public void showdata(){
-        ObservableList<Transaksi> data=FXML_UtamaController.dttrans.Load();
+        ObservableList<ModelTransaksi> data=FXML_UtamaController.dttrans.Load();
         if(data!=null){            
             tbvhistory.getColumns().clear();            
             tbvhistory.getItems().clear();
+            
             TableColumn col=new TableColumn("ID Transaksi");
-            col.setCellValueFactory(new PropertyValueFactory<Transaksi, String>("NoTrans"));
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, String>("NoTrans"));
             tbvhistory.getColumns().addAll(col);
+            
+            col=new TableColumn("ID Gedung");
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, String>("idgedung"));
+            tbvhistory.getColumns().addAll(col);
+            
             col=new TableColumn("No Tiket");
-            col.setCellValueFactory(new PropertyValueFactory<Transaksi, String>("NoTiket"));
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, String>("NoTiket"));
             tbvhistory.getColumns().addAll(col);
+            
+            col=new TableColumn("Plat");
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, String>("Plat"));
+            tbvhistory.getColumns().addAll(col);
+            
+            col=new TableColumn("Jenis Kendaraan");
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, String>("jenis"));
+            tbvhistory.getColumns().addAll(col);
+            
             col=new TableColumn("Jam Masuk");
-            col.setCellValueFactory(new PropertyValueFactory<Transaksi, Time>("Jam_Masuk"));
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, Time>("Jam_Masuk"));
             tbvhistory.getColumns().addAll(col);
+            
             col=new TableColumn("Jam Keluar");
-            col.setCellValueFactory(new PropertyValueFactory<Transaksi, Time>("Jam_Keluar"));
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, Time>("Jam_Keluar"));
             tbvhistory.getColumns().addAll(col);
+            
             col=new TableColumn("Total Bayar");
-            col.setCellValueFactory(new PropertyValueFactory<Transaksi, Integer>("Total_Bayar"));
+            col.setCellValueFactory(new PropertyValueFactory<ModelTransaksi, Integer>("Total_Bayar"));
             tbvhistory.getColumns().addAll(col);
             tbvhistory.setItems(data);
+            
             } else {
             Alert a=new Alert(Alert.AlertType.ERROR,"Data kosong",ButtonType.OK);
             a.showAndWait();
@@ -97,7 +115,7 @@ public class FXML_RekapController implements Initializable {
     @FXML
     private void keluarklik(ActionEvent event) {
         try{
-        FXMLLoader loader=new FXMLLoader(getClass().getResource("FXML_Keluar.fxml"));    
+        FXMLLoader loader=new FXMLLoader(getClass().getResource("FXMLKeluar.fxml"));    
         Parent root = (Parent)loader.load();        
         Scene scene = new Scene(root);        
         Stage stg=new Stage();

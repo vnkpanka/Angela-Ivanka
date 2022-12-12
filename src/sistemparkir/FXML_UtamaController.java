@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 public class FXML_UtamaController implements Initializable {
     public static DBTiket dtparkir=new DBTiket();
     public static DBTransaksi dttrans = new DBTransaksi();
-    
+    public static DBGedung dtgedung = new DBGedung();
     
 
     @FXML
@@ -37,6 +37,8 @@ public class FXML_UtamaController implements Initializable {
     private Button btntrans;
     @FXML
     private Button btnexit;
+    @FXML
+    private Button btnrt;
     
     
     
@@ -103,6 +105,24 @@ public class FXML_UtamaController implements Initializable {
     @FXML
     private void exitklik(ActionEvent event) {
         System.exit(0);
+    }
+
+    @FXML
+    private void rtklik(ActionEvent event) {
+        try{
+        FXMLLoader loader=new FXMLLoader(getClass().getResource("FXML_RT.fxml"));    
+        Parent root = (Parent)loader.load();        
+        Scene scene = new Scene(root);        
+        Stage stg=new Stage();
+        stg.initModality(Modality.APPLICATION_MODAL);
+        stg.setResizable(false);        
+        stg.setIconified(false);        
+        stg.setScene(scene);
+        stg.showAndWait();
+        btnmasuk.getScene().getWindow().hide();
+        } catch (IOException e){   
+            e.printStackTrace();   
+        }
     }
     
 }

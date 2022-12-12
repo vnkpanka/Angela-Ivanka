@@ -40,16 +40,8 @@ public class FXMLKeluarController implements Initializable {
     long biaya = 0;
     
     private boolean editdata=false;
-    @FXML
     private RadioButton rdbmobil;
-    @FXML
-    private ToggleGroup Jenis;
-    @FXML
     private RadioButton rdbmotor;
-    @FXML
-    private Button btnhitung;
-    @FXML
-    private Button btnhapus;
     @FXML
     private Button btnexit;
     @FXML
@@ -60,6 +52,10 @@ public class FXMLKeluarController implements Initializable {
     private TextField txtdspkeluar;
     @FXML
     private ComboBox<String> CBTiket;
+    @FXML
+    private TextField txtjenis;
+    @FXML
+    private TextField txtgedung;
 
     /**
      * Initializes the controller class.
@@ -67,41 +63,12 @@ public class FXMLKeluarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        ArrayList<String> List = FXML_UtamaController.dtparkir.List();
+        ArrayList<String> List = FXML_UtamaController.dtparkir.ListParkiran();
         CBTiket.getItems().addAll(List);
-        
     }    
 
-    @FXML
-    private void hitungklik(ActionEvent event) {
-        AmbilTiket Tiket = new AmbilTiket();
-        Tiket = FXML_UtamaController.dtparkir.CariTiket(CBTiket.getSelectionModel().getSelectedItem());
-        txtdspmasuk.setText(String.valueOf(Tiket.getJamMasuk()));
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        txtdspkeluar.setText(sdf.format(new java.util.Date()));
-        long time = (Time.valueOf(sdf.format(new java.util.Date())).getTime() - Tiket.getJamMasuk().getTime());
-        long diffHours = (time / (60 * 60 * 1000) % 24);
-        diffHours += 1;
-        //int biaya = diffHours * 
-        if (rdbmobil.isSelected()){
-            biaya = diffHours * 3000;
-        }
-        else if (rdbmotor.isSelected()){
-            biaya = diffHours * 2000;
-        }
-        txtbiaya.setText(String.valueOf(biaya));
-        
-        }
+   
 
-    @FXML
-    private void hapusklik(ActionEvent event) {
-        
-        rdbmobil.setSelected(false);
-        rdbmotor.setSelected(false);
-        txtdspmasuk.setText("");
-        txtdspkeluar.setText("");
-        txtbiaya.setText("");
-    }
 
     @FXML
     private void exitklik(ActionEvent event) {
@@ -124,21 +91,17 @@ public class FXMLKeluarController implements Initializable {
 
     @FXML
     private void Simpanklik(ActionEvent event) {
-        Transaksi n=new Transaksi();
-        AmbilTiket Tiket = new AmbilTiket();
-        Tiket = FXML_UtamaController.dtparkir.CariTiket(CBTiket.getSelectionModel().getSelectedItem());
-        
-        n.setNoTiket(Tiket.getNoTiket());
+        ModelTransaksi n=new ModelTransaksi();
+        n.setNoTiket(CBTiket.getSelectionModel().getSelectedItem());
+        n.setIdgedung(txtgedung.getText());
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("dd:mm:yyyy");
         n.setJam_Keluar(Time.valueOf(sdf.format(new java.util.Date())));
-        n.setHari_Keluar(null);
+        n.setHari_Keluar(FXML_UtamaController.dtparkir.getModelTiket().getHariMasuk());
         n.setTotal_Bayar((int)biaya);
-        
         ArrayList<String> List = FXML_UtamaController.dttrans.List();
         String urutan;
         if(!List.isEmpty()){
-           int urut = List.size();
+           int urut = Integer.valueOf(List.get(List.size()-1)) + 1;
            if(urut<100){urutan = "00"+String.valueOf(urut);}
            else if(urut<10){urutan = "0"+String.valueOf(urut);}
            else {urutan = String.valueOf(urut);}
@@ -147,19 +110,30 @@ public class FXMLKeluarController implements Initializable {
        }
         n.setNoTrans(urutan);
         
-        FXML_UtamaController.dttrans.setTransaksi(n);
-        if(editdata){
-            if(FXML_UtamaController.dttrans.update()){
-               Alert a=new Alert(Alert.AlertType.INFORMATION,"Data berhasil diubah",ButtonType.OK);
-               a.showAndWait();   CBTiket.setEditable(true);        hapusklik(event);                
-            } else {
-               Alert a=new Alert(Alert.AlertType.ERROR,"Data gagal diubah",ButtonType.OK);
-               a.showAndWait();                    
-            }
-        }else if(FXML_UtamaController.dttrans.validasi(n.getNoTiket())<=0){
+        FXML_UtamaController.dttrans.setModelTransaksi(n);
+        if(FXML_UtamaController.dttrans.validasi(n.getNoTiket())<=0){
             if(FXML_UtamaController.dttrans.insert()){
+               ModelGedung g = FXML_UtamaController.dtgedung.Search(txtgedung.getText());
+               g.setIdgedung(txtgedung.getText());
+               System.out.println(g.getKmobil());
+               System.out.println(g.getKmotor());
+               if(txtjenis.getText().equalsIgnoreCase("mobil")){
+                   g.setKmobil(g.getKmobil()+1);
+               } else if(txtjenis.getText().equalsIgnoreCase("motor")){
+                   g.setKmotor(g.getKmotor()+1);
+               }
+               System.out.println(g.getKmobil());
+               System.out.println(g.getKmotor());
+               FXML_UtamaController.dtgedung.setModelGedung(g);
+               if(FXML_UtamaController.dtgedung.update()){}
+               
+               ModelTiket t = FXML_UtamaController.dtparkir.Search(CBTiket.getSelectionModel().getSelectedItem());
+               t.setStatus("true");
+               FXML_UtamaController.dtparkir.setModelTiket(t);
+               if(FXML_UtamaController.dtparkir.update()){}
+               
                Alert a=new Alert(Alert.AlertType.INFORMATION,"Data berhasil disimpan",ButtonType.OK);
-               a.showAndWait();            hapusklik(event);
+               a.showAndWait();            clear();
             } else {
                Alert a=new Alert(Alert.AlertType.ERROR,"Data gagal disimpan",ButtonType.OK);
                a.showAndWait();            
@@ -169,9 +143,40 @@ public class FXMLKeluarController implements Initializable {
             a.showAndWait();
             CBTiket.requestFocus();
     }
-    
-
-    
+    ArrayList<String> ListTiket = FXML_UtamaController.dtparkir.ListParkiran();
+    CBTiket.getItems().clear();
+    CBTiket.getItems().addAll(ListTiket);
+    clear();
     }
+
+    @FXML
+    private void CheckJenis(ActionEvent event) {
+        ModelTiket m = FXML_UtamaController.dtparkir.Search(CBTiket.getSelectionModel().getSelectedItem());
+        txtjenis.setText(m.getJenis());
+        txtdspmasuk.setText(String.valueOf(m.getJamMasuk()));
+        txtgedung.setText(m.getIdgedung());
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        txtdspkeluar.setText(sdf.format(new java.util.Date()));
+        long time = (Time.valueOf(sdf.format(new java.util.Date())).getTime() - m.getJamMasuk().getTime());
+        long diffHours = (time / (60 * 60 * 1000) % 24);
+        diffHours += 1;
+        
+        // Hitung int biaya = diffHours * biayaperjam 
+        if(m.getJenis().equalsIgnoreCase("mobil")){
+            biaya = diffHours * 3000;
+        } else if(m.getJenis().equalsIgnoreCase("motor")){
+            biaya = diffHours * 2000;
+        }
+        txtbiaya.setText(String.valueOf(biaya));
+    }
+    
+    private void clear(){
+        txtgedung.setText("");
+        txtjenis.setText("");
+        txtdspmasuk.setText("");
+        txtdspkeluar.setText("");
+        txtbiaya.setText("");
+    }
+
 }
 
